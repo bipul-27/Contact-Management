@@ -106,14 +106,28 @@ add_action("admin_enqueue_scripts", "ems_add_plugin_assests");
 
 function ems_add_plugin_assests()
 {
-    //CSS
-    wp_enqueue_style("ems-bootstrap-css", CONTACT_PLUGIN_URL. "css/bootstrap.min.css", array(),"1.0.0", "all" );
-    wp_enqueue_style("ems-datatable-css", CONTACT_PLUGIN_URL. "css/dataTables.dataTables.min.css", array(),"1.0.0", "all" );
-    wp_enqueue_style("ems-custom-css", CONTACT_PLUGIN_URL."css/custom.css", array(), "1.0.0", "all");
-    //js
-    wp_enqueue_script("ems-bootstrap-js", CONTACT_PLUGIN_URL. "js/bootstrap.min.js", array("jquery"), "1.0.0" );
-    wp_enqueue_script("ems-datatable-js", CONTACT_PLUGIN_URL. "js/dataTables.min.js", array("jquery"), "1.0.0" );
-    wp_enqueue_script("ems-custom-js", CONTACT_PLUGIN_URL. "js/custom.js", array("jquery"), "1.0.0" );
-    wp_enqueue_script("ems-validate-js", CONTACT_PLUGIN_URL."js/jquery.validate.min.js", array("jquery"), "1.0.0");
-    wp_add_inline_script("ems-validate-js", file_get_contents(CONTACT_PLUGIN_URL."js/custom.js"));
-} 
+    // CSS
+    wp_enqueue_style("ems-bootstrap-css", CONTACT_PLUGIN_URL . "css/bootstrap.min.css", array(), "1.0.0", "all");
+    wp_enqueue_style("ems-datatable-css", CONTACT_PLUGIN_URL . "css/dataTables.dataTables.min.css", array(), "1.0.0", "all");
+    wp_enqueue_style("ems-custom-css", CONTACT_PLUGIN_URL . "css/custom.css", array(), "1.0.0", "all");
+
+    // JS
+    wp_enqueue_script("ems-bootstrap-js", CONTACT_PLUGIN_URL . "js/bootstrap.min.js", array("jquery"), "1.0.0");
+    wp_enqueue_script("ems-datatable-js", CONTACT_PLUGIN_URL . "js/dataTables.min.js", array("jquery"), "1.0.0");
+    wp_enqueue_script("ems-custom-js", CONTACT_PLUGIN_URL . "js/custom.js", array("jquery"), "1.0.0");
+
+    // Enqueue wp_remote_get for custom.js
+    $response = wp_remote_get(CONTACT_PLUGIN_URL . "js/custom.js");
+    
+    if (!is_wp_error($response)) {
+        $body = wp_remote_retrieve_body($response);
+        // Enqueue custom.js content
+        wp_add_inline_script("ems-custom-js", $body);
+    } else {
+        // Handle wp_remote_get error
+        error_log("Failed to fetch custom.js: " . $response->get_error_message());
+    }
+
+    // Enqueue jQuery Validate
+    wp_enqueue_script("ems-validate-js", CONTACT_PLUGIN_URL . "js/jquery.validate.min.js", array("jquery"), "1.0.0");
+}
