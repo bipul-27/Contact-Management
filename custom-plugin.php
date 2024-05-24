@@ -38,12 +38,12 @@ function cp_add_admin_menu()
 function contact_manage_system()
 {
 
-    include_once(CONTACT_PLUGIN_PATH."pages\create-contact.php");
+    include_once(CONTACT_PLUGIN_PATH."pages/create-contact.php");
 }
 // Submenu callback function
 function list_contact()
 {
-    include_once(CONTACT_PLUGIN_PATH."pages\contact-list.php");
+    include_once(CONTACT_PLUGIN_PATH."pages/contact-list.php");
 }
 
 register_activation_hook(__FILE__,"ems_create_table");
@@ -131,3 +131,4 @@ function ems_add_plugin_assests()
     // Enqueue jQuery Validate
     wp_enqueue_script("ems-validate-js", CONTACT_PLUGIN_URL . "js/jquery.validate.min.js", array("jquery"), "1.0.0");
 }
+ 
